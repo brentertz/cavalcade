@@ -1,2 +1,2 @@
 server: node server/index.js
-worker: node worker/index.js
+worker: node server/worker.js
