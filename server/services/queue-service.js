@@ -9,11 +9,19 @@ module.exports = function(config) {
     region: config.get('aws.region')
   });
 
+  var queueUrl = config.get('aws.sqs.queueUrl');
+
   return {
     sendMessage: function(message, callback) {
       var params = {
-        QueueUrl: config.get('aws.sqs.queueUrl'),
-        MessageBody: JSON.stringify(message)
+        QueueUrl: queueUrl,
+        MessageBody: message.body,
+        MessageAttributes: {
+          type: {
+            DataType: 'String',
+            StringValue: message.type
+          }
+        }
       };
 
       sqs.sendMessage(params, function(err, data) {
@@ -29,8 +37,9 @@ module.exports = function(config) {
 
     receiveMessage: function(callback) {
       var params = {
-        QueueUrl: config.get('aws.sqs.queueUrl'),
-        MaxNumberOfMessages: 1
+        QueueUrl: queueUrl,
+        AttributeNames: ['All'],
+        MessageAttributeNames: ['All']
       };
 
       sqs.receiveMessage(params, function(err, data) {
@@ -46,8 +55,8 @@ module.exports = function(config) {
 
     deleteMessage: function(message, callback) {
       var params = {
-        QueueUrl: config.get('aws.sqs.queueUrl'),
-        ReceiptHandle: message.ReceiptHandle
+        QueueUrl: queueUrl,
+        ReceiptHandle: message.receiptHandle
       };
 
       sqs.deleteMessage(params, function(err, data) {

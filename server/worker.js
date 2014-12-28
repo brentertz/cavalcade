@@ -6,11 +6,12 @@ var config = require('config');
 
 var queue = require('./services/queue-service')(config);
 var workers = require('./lib/workers');
+var Message = require('./lib/message');
 
 var process = function() {
   queue.receiveMessage(function(err, data) {
     if (data.Messages && data.Messages.length) {
-      var message = data.Messages[0];
+      var message = new Message().ingest(data.Messages[0]);
       console.log('Processing message:', message);
 
       async.series([
