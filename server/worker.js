@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var async = require('async');
 var config = require('config');
 
@@ -7,19 +8,17 @@ var queue = require('./services/queue-service')(config);
 var workers = require('./lib/workers');
 
 var process = function() {
-  var ctx = {};
-
   queue.receiveMessage(function(err, data) {
     if (data.Messages && data.Messages.length) {
-      ctx.message = data.Messages[0];
-      console.log('Processing message:', ctx.message);
+      var message = data.Messages[0];
+      console.log('Processing message:', message);
 
       async.series([
         function(callback) {
-          queue.deleteMessage(ctx.message, callback);
+          queue.deleteMessage(message, callback);
         },
         function(callback) {
-          async.applyEachSeries(workers, ctx.message, callback);
+          async.applyEachSeries(_.pluck(workers, 'process'), message, callback);
         }
       ], function(err, data) {
         if (err) {

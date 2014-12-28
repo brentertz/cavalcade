@@ -12,4 +12,8 @@ var workers = files.reduce(function(memo, file) {
   return memo;
 }, []);
 
+workers.sort(function(a, b) {
+  return b.priority - a.priority;
+});
+
 module.exports = workers;
