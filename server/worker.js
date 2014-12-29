@@ -16,10 +16,10 @@ var process = function() {
 
       async.series([
         function(callback) {
-          queue.deleteMessage(message, callback);
+          async.applyEachSeries(_.pluck(workers, 'process'), message, callback);
         },
         function(callback) {
-          async.applyEachSeries(_.pluck(workers, 'process'), message, callback);
+          queue.deleteMessage(message, callback);
         }
       ], function(err, data) {
         if (err) {
