@@ -7,7 +7,7 @@ var worker = new Worker({
   priority: 50
 });
 
-worker.process = function(message, callback) {
+worker.processMessage = function(message, callback) {
   console.log('%s processed message', worker.name);
   callback(null);
 };

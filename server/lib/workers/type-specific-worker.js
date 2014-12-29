@@ -3,7 +3,8 @@
 var Worker = require('../worker');
 
 var worker = new Worker({
-  name: 'regular-priority-worker'
+  name: 'type-specific-worker',
+  handledMessageTypes: ['type-specific']
 });
 
 worker.processMessage = function(message, callback) {
