@@ -28,13 +28,13 @@ override these values with ENV variables. See
 ### Start
 
 ```
-PORT=3000 nf start
+npm start
 ```
 
 You can easily create multiple worker processes.
 
 ```
-PORT=3000 nf start server=1,worker=2
+npm start server=1,worker=2
 ```
 
 Use the following commands to easily send sample messages to the queue.
